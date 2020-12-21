@@ -2,18 +2,22 @@ import java.util.concurrent.CountDownLatch;
 
 public class RunnableCounter implements Runnable {
     private final AddOneToCounter addOneToCounter;
-    private final CountDownLatch countDownLatch;
+    private final CountDownLatch countDownLatchStart;
+    private final CountDownLatch countDownLatchFinish;
 
-    public RunnableCounter(CountDownLatch countDownLatch, AddOneToCounter addOneToCounter) {
+    public RunnableCounter(CountDownLatch countDownLatchStart,
+                           CountDownLatch countDownLatchFinish,
+                           AddOneToCounter addOneToCounter) {
         this.addOneToCounter = addOneToCounter;
-        this.countDownLatch = countDownLatch;
+        this.countDownLatchStart = countDownLatchStart;
+        this.countDownLatchFinish = countDownLatchFinish;
     }
 
     @Override
     public void run() {
         try {
-            countDownLatch.await();
-            addOneToCounter.increment();
+            countDownLatchStart.await();
+            addOneToCounter.increment(countDownLatchFinish);
         } catch (InterruptedException e) {
             System.out.println("Interruptes with message " + e.getMessage());
         }

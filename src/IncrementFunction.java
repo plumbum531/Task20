@@ -1,4 +1,7 @@
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class IncrementFunction {
     //    Создать 2000 одновременных задач, которые увеличивают целочисленный счетчик на 1.
@@ -6,18 +9,20 @@ public class IncrementFunction {
 
     void counterPlusOne() {
         AddOneToCounter addOneToCounter = new AddOneToCounter();
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        ExecutorService executor = Executors.newFixedThreadPool(2000);
-        for (int i = 0; i < 200000; i++) {
-            executor.execute(new RunnableCounter(countDownLatch, addOneToCounter));
+        CountDownLatch countDownLatchStart = new CountDownLatch(1);
+        CountDownLatch countDownLatchFinish = new CountDownLatch(5000);
+        ExecutorService executor = Executors.newFixedThreadPool(5000);
+        for (int i = 0; i < 5000; i++) {
+            executor.execute(new RunnableCounter(countDownLatchStart, countDownLatchFinish, addOneToCounter));
         }
-        countDownLatch.countDown();
+        countDownLatchStart.countDown();
         try {
-            Thread.sleep(100);
+            countDownLatchFinish.await();
+            System.out.println("Counter: = " + addOneToCounter.myCounter);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println("Interrupted with message " + e.getMessage());
+        } finally {
+           executor.shutdown();
         }
-        System.out.println("Counter: = " + addOneToCounter.myCounter);
-        executor.shutdown();
     }
 }
