@@ -16,14 +16,22 @@ public class Main {
         PrintClass printClass = new PrintClass();
         ScheduledExecutorService scheldulerExecutor = Executors.newScheduledThreadPool(3);
 
+        Runnable newLine = ()->{
+            try {
+                latchStart.await();
+                System.out.println();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
         scheldulerExecutor.scheduleAtFixedRate(new PrepearFirstClass(printClass, latchStart), 0, 1,
                 TimeUnit.SECONDS);
         scheldulerExecutor.scheduleAtFixedRate(new PrepearSecondClass(printClass, latchStart), 0, 1,
                 TimeUnit.SECONDS);
         scheldulerExecutor.scheduleAtFixedRate(new StopClass(latchStart, scheldulerExecutor),6,1, TimeUnit.SECONDS );
+        scheldulerExecutor.scheduleAtFixedRate(newLine,200,1000, TimeUnit.MILLISECONDS );
 
         latchStart.countDown();
-
-
     }
 }
