@@ -1,5 +1,6 @@
+package TwoThousandTask;
+
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,7 +12,7 @@ public class IncrementFunction {
         AddOneToCounter addOneToCounter = new AddOneToCounter();
         CountDownLatch countDownLatchStart = new CountDownLatch(1);
         CountDownLatch countDownLatchFinish = new CountDownLatch(5000);
-        ExecutorService executor = Executors.newFixedThreadPool(5000);
+        ExecutorService executor = Executors.newCachedThreadPool();
         for (int i = 0; i < 5000; i++) {
             executor.execute(new RunnableCounter(countDownLatchStart, countDownLatchFinish, addOneToCounter));
         }
