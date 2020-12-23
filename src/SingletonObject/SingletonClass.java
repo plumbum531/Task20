@@ -1,7 +1,8 @@
 package SingletonObject;
 
 public class SingletonClass {
-    private static SingletonClass singleton;
+    private volatile static SingletonClass singleton;
+    private static final Object lock = new Object();
     private int secretInt;
     static int counter;
 
@@ -13,7 +14,7 @@ public class SingletonClass {
     public static SingletonClass getSingleton() {
         if (singleton == null) {
             try {
-                int sleepTime = 2;
+                int sleepTime = 52;
                 Thread.sleep(sleepTime);
                 singleton = new SingletonClass();
             } catch (InterruptedException e) {
