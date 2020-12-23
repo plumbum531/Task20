@@ -12,8 +12,6 @@ public class Main {
 
     void run() {
         CountDownLatch latchStart = new CountDownLatch(1);
-        CountDownLatch latchFinish = new CountDownLatch(6);
-        PrintClass printClass = new PrintClass();
         ScheduledExecutorService scheldulerExecutor = Executors.newScheduledThreadPool(3);
 
         Runnable newLine = ()->{
@@ -25,12 +23,37 @@ public class Main {
             }
         };
 
-        scheldulerExecutor.scheduleAtFixedRate(new PrepearFirstClass(printClass, latchStart), 0, 1,
-                TimeUnit.SECONDS);
-        scheldulerExecutor.scheduleAtFixedRate(new PrepearSecondClass(printClass, latchStart), 0, 1,
-                TimeUnit.SECONDS);
-        scheldulerExecutor.scheduleAtFixedRate(new StopClass(latchStart, scheldulerExecutor),6,1, TimeUnit.SECONDS );
-        scheldulerExecutor.scheduleAtFixedRate(newLine,200,1000, TimeUnit.MILLISECONDS );
+        Runnable firstMethod = ()->{
+            try {
+                latchStart.await();
+                System.out.print(" Hello ");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Runnable secondMethod = ()->{
+            try {
+                latchStart.await();
+                System.out.print(" World ");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Runnable stopClass = ()->{
+            try {
+                latchStart.await();
+                scheldulerExecutor.shutdown();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        scheldulerExecutor.scheduleAtFixedRate(firstMethod, 0, 1, TimeUnit.SECONDS);
+        scheldulerExecutor.scheduleAtFixedRate(secondMethod, 0, 1, TimeUnit.SECONDS);
+        scheldulerExecutor.scheduleAtFixedRate(stopClass,6,1, TimeUnit.SECONDS );
+        scheldulerExecutor.scheduleAtFixedRate(newLine,300,1000, TimeUnit.MILLISECONDS );
 
         latchStart.countDown();
     }
