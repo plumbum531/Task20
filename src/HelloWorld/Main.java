@@ -50,10 +50,10 @@ public class Main {
             }
         };
 
-        scheldulerExecutor.scheduleAtFixedRate(firstMethod, 0, 1, TimeUnit.SECONDS);
-        scheldulerExecutor.scheduleAtFixedRate(secondMethod, 0, 1, TimeUnit.SECONDS);
-        scheldulerExecutor.scheduleAtFixedRate(stopClass,6,1, TimeUnit.SECONDS );
-        scheldulerExecutor.scheduleAtFixedRate(newLine,300,1000, TimeUnit.MILLISECONDS );
+        scheldulerExecutor.scheduleAtFixedRate(firstMethod, 0, 10, TimeUnit.SECONDS);
+        scheldulerExecutor.scheduleAtFixedRate(secondMethod, 0, 10, TimeUnit.SECONDS);
+        scheldulerExecutor.scheduleAtFixedRate(stopClass,60,1, TimeUnit.SECONDS );
+        scheldulerExecutor.scheduleAtFixedRate(newLine,300,10000, TimeUnit.MILLISECONDS );
 
         latchStart.countDown();
     }
