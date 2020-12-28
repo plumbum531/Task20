@@ -4,7 +4,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class AddOneToCounter {
     private int myCounter;
- //   private final Object lock = new Object();
+//    private final Object lock = new Object();
 
     public void increment(CountDownLatch countDownLatchFinish) {
 //        synchronized (lock) {

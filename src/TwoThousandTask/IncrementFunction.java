@@ -3,6 +3,9 @@ package TwoThousandTask;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static javax.swing.plaf.synth.ColorType.MAX_COUNT;
+
+
 //    Создать 2000 одновременных задач, которые увеличивают целочисленный счетчик на 1.
 //    Подтвердить проблему атомарности. Проверить ее решение с помощью volatile или Atomic классов.
 public class IncrementFunction {
@@ -10,11 +13,12 @@ public class IncrementFunction {
         new IncrementFunction().counterPlusOne();
     }
     void counterPlusOne() {
+        int expectedCount = (int)(Math.random()* MAX_COUNT + 2000);
+        System.out.println("expectedCount " + expectedCount);
         AddOneToCounter addOneToCounter = new AddOneToCounter();
         CountDownLatch countDownLatchStart = new CountDownLatch(1);
-        CountDownLatch countDownLatchFinish = new CountDownLatch(5000);
-        ExecutorService executor = Executors.newFixedThreadPool(5000);
-        Future <?> future = null;
+        CountDownLatch countDownLatchFinish = new CountDownLatch(expectedCount);
+        ExecutorService executor = Executors.newFixedThreadPool(expectedCount);
 
         Runnable counter = ()->{
             try {
@@ -26,7 +30,7 @@ public class IncrementFunction {
             }
         };
 
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < expectedCount; i++) {
 //            executor.execute(new RunnableCounter(countDownLatchStart, countDownLatchFinish, addOneToCounter));
             executor.execute(counter);
         }
